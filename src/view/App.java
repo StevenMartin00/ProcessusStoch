@@ -21,9 +21,11 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.border.EtchedBorder;
 
@@ -43,6 +45,7 @@ public class App
 					appController.getFrame().setVisible(true);*/
 					App app = new App();
 					app.initialize();
+					app.frmFilesDattente.setResizable(false);
 					app.frmFilesDattente.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -58,6 +61,9 @@ public class App
 	private String results;
 	private JTextField txtFieldNbServeur;
 	private JTextField textFieldTempsPourcent;
+	private FileMM1 mm1;
+	private FileMM1K mm1k;
+	private FileMMS mms;
 	
 	/**
 	 * Initialize the contents of the frame.
@@ -103,7 +109,18 @@ public class App
 		txtFieldNbServicesMoy.setBounds(49, 99, 190, 22);
 		frmFilesDattente.getContentPane().add(txtFieldNbServicesMoy);
 		
+		JLabel lblUniteTemps = new JLabel("");
+		lblUniteTemps.setBounds(259, 361, 138, 14);
+		frmFilesDattente.getContentPane().add(lblUniteTemps);
+		
 		JComboBox cbUniteTemps = new JComboBox();
+		cbUniteTemps.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(cbUniteTemps.getSelectedIndex() != -1)
+					lblUniteTemps.setText(cbUniteTemps.getSelectedItem().toString());
+			}
+		});
 		cbUniteTemps.setBackground(Color.WHITE);
 		cbUniteTemps.setBounds(274, 69, 190, 22);
 		/** Adds all the time units to the combobox **/
@@ -156,13 +173,15 @@ public class App
 		
 		JTextArea txtAreaResultats = new JTextArea();
 		txtAreaResultats.setBounds(49, 440, 404, 125);
+		Border border = BorderFactory.createLineBorder(Color.BLACK);
+		txtAreaResultats.setBorder(BorderFactory.createCompoundBorder(border, 
+	            BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 		frmFilesDattente.getContentPane().add(txtAreaResultats);
 		
 		JLabel lblResultats = new JLabel("Résultats");
 		lblResultats.setBounds(49, 418, 56, 16);
 		frmFilesDattente.getContentPane().add(lblResultats);
 		
-		//TODO: prendre en compte unité de temps
 		JButton btnCalculer = new JButton("Calculer");
 		btnCalculer.addActionListener(new ActionListener() 
 		{
@@ -178,44 +197,48 @@ public class App
 							{
 								if(chckbxIndetermine.isSelected())
 								{
-									FileMM1 fileMM1 = new FileMM1(Double.parseDouble(txtFieldClientsMoy.getText()), Double.parseDouble(txtFieldNbServicesMoy.getText()));
-									results = getResult(fileMM1.L(), fileMM1.Lq(), fileMM1.W(), fileMM1.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem());
+									mm1 = new FileMM1(Double.parseDouble(txtFieldClientsMoy.getText()), Double.parseDouble(txtFieldNbServicesMoy.getText()));
+									results = getResult(mm1.L(), mm1.Lq(), mm1.W(), mm1.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), false, 0, 0);
 									txtAreaResultats.setText(results);
 								}
 								else
 								{
 									if(!txtFieldClientsMax.getText().equals(""))
 									{
-										FileMM1K fileMM1K = new FileMM1K(Double.parseDouble(txtFieldClientsMoy.getText()), Double.parseDouble(txtFieldNbServicesMoy.getText()), Integer.parseInt(txtFieldClientsMax.getText()));
-										results = getResult(fileMM1K.L(), fileMM1K.Lq(), 0, 0, (TimeUnit) cbUniteTemps.getSelectedItem());
+										mm1k = new FileMM1K(Double.parseDouble(txtFieldClientsMoy.getText()), Double.parseDouble(txtFieldNbServicesMoy.getText()), Integer.parseInt(txtFieldClientsMax.getText()));
+										results = getResult(mm1k.L(), mm1k.Lq(), 0, 0, (TimeUnit) cbUniteTemps.getSelectedItem(), false, 0, 0);
 										txtAreaResultats.setText(results);
 									}
 									else
 									{
 										//Print alert clients max doit etre rempli
+										JOptionPane.showMessageDialog(frmFilesDattente, "Le champ correspondant au nombre de clients maximum doit être rempli");
 									}
 								}
 							}
 							else
 							{
-								FileMMS fileMMS = new FileMMS(Double.parseDouble(txtFieldClientsMoy.getText()), Double.parseDouble(txtFieldNbServicesMoy.getText()), Integer.parseInt(txtFieldNbServeur.getText()));
-								results = getResult(fileMMS.L(), fileMMS.Lq(), fileMMS.W(), fileMMS.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem());
+								mms = new FileMMS(Double.parseDouble(txtFieldClientsMoy.getText()), Double.parseDouble(txtFieldNbServicesMoy.getText()), Integer.parseInt(txtFieldNbServeur.getText()));
+								results = getResult(mms.L(), mms.Lq(), mms.W(), mms.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), false, 0, 0);
 								txtAreaResultats.setText(results);
-							}
+							}	
 						}
 						else
 						{
 							//Print alert < 0
+							JOptionPane.showMessageDialog(frmFilesDattente, "Le nombre de clients, de services ou de serveur ne peut être négatif");
 						}
 					}
 					else
 					{
 						//Print alert 0 impossible
+						JOptionPane.showMessageDialog(frmFilesDattente, "Le nombre de clients, de services ou de serveur ne peut être nul");
 					}
 				}
 				else
 				{
 					//Print alert remplir champs
+					JOptionPane.showMessageDialog(frmFilesDattente, "Tous les champs doivent être remplis");
 				}
 			}
 		});
@@ -248,14 +271,36 @@ public class App
 		JLabel lblProbabilitQuunClient = new JLabel("Probabilité qu'un client attende plus que");
 		lblProbabilitQuunClient.setBounds(49, 330, 348, 16);
 		frmFilesDattente.getContentPane().add(lblProbabilitQuunClient);
-		
-		JLabel lblUniteTemps = new JLabel("");
-		lblUniteTemps.setBounds(259, 361, 46, 14);
-		frmFilesDattente.getContentPane().add(lblUniteTemps);
-		
-		JButton buttonCalculerPropa = new JButton("Calculer Proba");
-		buttonCalculerPropa.setBounds(341, 375, 123, 25);
-		frmFilesDattente.getContentPane().add(buttonCalculerPropa);
+
+		JButton buttonCalculerProba = new JButton("Calculer Proba");
+		buttonCalculerProba.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(!textFieldTempsPourcent.getText().equals(""))
+				{
+					if(Integer.valueOf(textFieldTempsPourcent.getText()) > 0)
+					{
+						if(Integer.valueOf(txtFieldNbServeur.getText()) == 1)
+						{
+							results = getResult(mm1.L(), mm1.Lq(), mm1.W(), mm1.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), true, textFieldTempsPourcent.getText().toLowerCase(), mm1.probaTempsSejour(Double.valueOf(textFieldTempsPourcent.getText())));
+							txtAreaResultats.setText(results);
+						}
+						else
+						{
+							results = getResult(mms.L(), mms.Lq(), mms.W(), mms.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), true, textFieldTempsPourcent.getText().toLowerCase(), mms.probaTempsSejour(Double.valueOf(textFieldTempsPourcent.getText())));
+							txtAreaResultats.setText(results);
+						}
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(frmFilesDattente, "Le temps d'attente d'un client ne peut être négatif");
+					}
+				}
+					
+			}
+		});
+		buttonCalculerProba.setBounds(341, 375, 123, 25);
+		frmFilesDattente.getContentPane().add(buttonCalculerProba);
 		
 		Box horizontalBox = Box.createHorizontalBox();
 		horizontalBox.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -276,8 +321,15 @@ public class App
 	/**
 	 * Creates a result string
 	 */
-	public String getResult(double l, double lq, double w, double wq, TimeUnit tu)
+	public String getResult(double l, double lq, double w, double wq, TimeUnit tu, boolean isProba, String time, double proba)
 	{
-		return "L : " + String.valueOf(l) + "\n" + "Lq : " + String.valueOf(lq) + "\n" + "W : " + String.valueOf(w) + "\n" + "Wq : " + String.valueOf(wq) + "\n" + "Unité de temps : " + tu.name().toLowerCase();
+		if(isProba)
+		{
+			return "Nombre moyen de clients dans le système (L) : " + String.valueOf(l) + "\n" + "Nombre moyen de clients dans la file (Lq) : " + String.valueOf(lq) + "\n" + "Durée moyenne d'attente dans le système (W) : " + String.valueOf(w) + " " + tu.name().toLowerCase() + "\n" + "Durée moyenne d'attente dans la file (Wq) : " + String.valueOf(wq) + " " + tu.name().toLowerCase() + "\n" + "Probabilité qu'un client attende plus de " + time + " est de : " + String.valueOf(proba);
+		}
+		else
+		{
+			return "Nombre moyen de clients dans le système (L) : " + String.valueOf(l) + "\n" + "Nombre moyen de clients dans la file (Lq) : " + String.valueOf(lq) + "\n" + "Durée moyenne d'attente dans le système (W) : " + String.valueOf(w) + " " + tu.name().toLowerCase() + "\n" + "Durée moyenne d'attente dans la file (Wq) : " + String.valueOf(wq) + " " + tu.name().toLowerCase();
+		}
 	}
 }
