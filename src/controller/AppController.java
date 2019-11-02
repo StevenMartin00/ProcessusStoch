@@ -147,6 +147,7 @@ public class AppController
 		
 		JTextArea txtAreaResultats = new JTextArea();
 		txtAreaResultats.setBounds(49, 440, 404, 125);
+		txtAreaResultats.setEditable(false);
 		Border border = BorderFactory.createLineBorder(Color.BLACK);
 		txtAreaResultats.setBorder(BorderFactory.createCompoundBorder(border, 
 	            BorderFactory.createEmptyBorder(10, 10, 10, 10)));
