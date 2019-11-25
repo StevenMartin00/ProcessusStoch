@@ -19,6 +19,9 @@ public class App
 					appController.initialize();
 					appController.getFrame().setResizable(false);
 					appController.getFrame().setVisible(true);
+					/*App app = new App();
+					app.initialize();
+					app.frmFilesDattente.setVisible(true);*/
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

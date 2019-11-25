@@ -20,7 +20,9 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextArea;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.text.NumberFormatter;
@@ -29,11 +31,8 @@ public class AppController
 {
 
 	private JFrame frmFilesDattente;
-	private JFormattedTextField txtFieldClientsMoy;
-	private JFormattedTextField txtFieldNbServicesMoy;
 	private JFormattedTextField txtFieldClientsMax;
 	private String results;
-	private JFormattedTextField txtFieldNbServeur;
 	private JFormattedTextField textFieldTempsPourcent;
 	private FileMM1 mm1;
 	private FileMM1K mm1k;
@@ -73,18 +72,23 @@ public class AppController
 		numberFormatter.setValueClass(Integer.class); 
 		numberFormatter.setAllowsInvalid(false);
 		
-		txtFieldClientsMoy = new JFormattedTextField(numberFormatter);
-		txtFieldClientsMoy.setColumns(10);
-		txtFieldClientsMoy.setBounds(49, 40, 190, 22);
-		frmFilesDattente.getContentPane().add(txtFieldClientsMoy);
+		JSpinner spinnerNbServicesMoy = new JSpinner();
+		spinnerNbServicesMoy.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spinnerNbServicesMoy.setBounds(49, 104, 190, 22);
+		frmFilesDattente.getContentPane().add(spinnerNbServicesMoy);
 		
-		txtFieldNbServicesMoy = new JFormattedTextField(numberFormatter);
-		txtFieldNbServicesMoy.setColumns(10);
-		txtFieldNbServicesMoy.setBounds(49, 99, 190, 22);
-		frmFilesDattente.getContentPane().add(txtFieldNbServicesMoy);
+		JSpinner spinnerClientsMoy = new JSpinner();
+		spinnerClientsMoy.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spinnerClientsMoy.setBounds(49, 45, 190, 22);
+		frmFilesDattente.getContentPane().add(spinnerClientsMoy);
+		
+		JSpinner spinnerNbServeur = new JSpinner();
+		spinnerNbServeur.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spinnerNbServeur.setBounds(49, 188, 190, 22);
+		frmFilesDattente.getContentPane().add(spinnerNbServeur);
 		
 		JLabel lblUniteTemps = new JLabel("");
-		lblUniteTemps.setBounds(259, 361, 138, 14);
+		lblUniteTemps.setBounds(257, 353, 138, 22);
 		frmFilesDattente.getContentPane().add(lblUniteTemps);
 		
 		JComboBox<TimeUnit> cbUniteTemps = new JComboBox<TimeUnit>();
@@ -118,10 +122,10 @@ public class AppController
 		lblNombreDeServices.setBounds(49, 75, 236, 16);
 		frmFilesDattente.getContentPane().add(lblNombreDeServices);
 		
-		txtFieldClientsMax = new JFormattedTextField(numberFormatter);
-		txtFieldClientsMax.setColumns(10);
-		txtFieldClientsMax.setBounds(49, 235, 190, 22);
-		frmFilesDattente.getContentPane().add(txtFieldClientsMax);
+		JSpinner spinnerClientsMax = new JSpinner();
+		spinnerClientsMax.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+		spinnerClientsMax.setBounds(49, 240, 190, 22);
+		frmFilesDattente.getContentPane().add(spinnerClientsMax);
 		
 		JLabel lblNbClientsMax = new JLabel("Nombre de clients max *");
 		lblNbClientsMax.setBounds(49, 211, 190, 16);
@@ -132,17 +136,17 @@ public class AppController
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-				if(txtFieldClientsMax.isEnabled())
+				if(spinnerClientsMax.isEnabled())
 				{
-					txtFieldClientsMax.setEnabled(false);
+					spinnerClientsMax.setEnabled(false);
 				}
 				else
 				{
-					txtFieldClientsMax.setEnabled(true);
+					spinnerClientsMax.setEnabled(true);
 				}
 			}
 		});
-		chckbxIndetermine.setBounds(259, 232, 100, 25);
+		chckbxIndetermine.setBounds(257, 239, 100, 25);
 		frmFilesDattente.getContentPane().add(chckbxIndetermine);
 		
 		JTextArea txtAreaResultats = new JTextArea();
@@ -162,25 +166,26 @@ public class AppController
 		{
 			public void actionPerformed(ActionEvent arg0) 
 			{
-				if(!txtFieldClientsMoy.getText().equals("")  && !txtFieldNbServicesMoy.getText().equals(""))
+				if(!spinnerClientsMoy.getValue().toString().equals("")  && !spinnerNbServicesMoy.getValue().toString().equals(""))
 				{
-					if(Integer.valueOf(txtFieldClientsMoy.getText()) != 0 && Integer.valueOf(txtFieldNbServicesMoy.getText()) != 0)
+					if(Integer.valueOf(spinnerClientsMoy.getValue().toString()) != 0 && Integer.valueOf(spinnerNbServicesMoy.getValue().toString()) != 0)
 					{
-						if(Integer.valueOf(txtFieldClientsMoy.getText()) > 0 && Integer.valueOf(txtFieldNbServicesMoy.getText()) > 0 && Integer.valueOf(txtFieldNbServeur.getText()) > 0)
+						if(Integer.valueOf(spinnerClientsMoy.getValue().toString()) > 0 && Integer.valueOf(spinnerNbServicesMoy.getValue().toString()) > 0 && Integer.valueOf(spinnerNbServeur.getValue().toString()) > 0)
 						{
-							if(Integer.valueOf(txtFieldNbServeur.getText()) == 1)
+							if(Integer.valueOf(spinnerNbServeur.getValue().toString()) == 1)
 							{
 								if(chckbxIndetermine.isSelected())
 								{
-									mm1 = new FileMM1(Double.parseDouble(txtFieldClientsMoy.getText()), Double.parseDouble(txtFieldNbServicesMoy.getText()));
+									System.out.println(spinnerNbServicesMoy.getValue().toString());
+									mm1 = new FileMM1(Double.parseDouble(spinnerClientsMoy.getValue().toString()), Double.parseDouble(spinnerNbServicesMoy.getValue().toString()));
 									results = getResult(mm1.L(), mm1.Lq(), mm1.W(), mm1.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), false, 0, 0);
 									txtAreaResultats.setText(results);
 								}
 								else
 								{
-									if(!txtFieldClientsMax.getText().equals(""))
+									if(!spinnerClientsMax.getValue().toString().equals(""))
 									{
-										mm1k = new FileMM1K(Double.parseDouble(txtFieldClientsMoy.getText()), Double.parseDouble(txtFieldNbServicesMoy.getText()), Integer.parseInt(txtFieldClientsMax.getText()));
+										mm1k = new FileMM1K(Double.parseDouble(spinnerClientsMoy.getValue().toString()), Double.parseDouble(spinnerNbServicesMoy.getValue().toString()), Integer.parseInt(spinnerNbServeur.getValue().toString()));
 										results = getResult(mm1k.L(), mm1k.Lq(), 0, 0, (TimeUnit) cbUniteTemps.getSelectedItem(), false, 0, 0);
 										txtAreaResultats.setText(results);
 									}
@@ -193,7 +198,7 @@ public class AppController
 							}
 							else
 							{
-								mms = new FileMMS(Double.parseDouble(txtFieldClientsMoy.getText()), Double.parseDouble(txtFieldNbServicesMoy.getText()), Integer.parseInt(txtFieldNbServeur.getText()));
+								mms = new FileMMS(Double.parseDouble(spinnerClientsMoy.getValue().toString()), Double.parseDouble(spinnerNbServicesMoy.getValue().toString()), Integer.parseInt(spinnerNbServeur.getValue().toString()));
 								results = getResult(mms.L(), mms.Lq(), mms.W(), mms.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), false, 0, 0);
 								txtAreaResultats.setText(results);
 							}	
@@ -220,11 +225,6 @@ public class AppController
 		btnCalculer.setBounds(365, 251, 99, 25);
 		frmFilesDattente.getContentPane().add(btnCalculer);
 		
-		txtFieldNbServeur = new JFormattedTextField(numberFormatter);
-		txtFieldNbServeur.setColumns(10);
-		txtFieldNbServeur.setBounds(49, 182, 190, 22);
-		frmFilesDattente.getContentPane().add(txtFieldNbServeur);
-		
 		JLabel lblNombreDeServeur = new JLabel("Nombre de serveurs *");
 		lblNombreDeServeur.setBounds(49, 158, 190, 16);
 		frmFilesDattente.getContentPane().add(lblNombreDeServeur);
@@ -235,13 +235,13 @@ public class AppController
 		
 		Box horizontalBox_1 = Box.createHorizontalBox();
 		horizontalBox_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		horizontalBox_1.setBounds(25, 11, 469, 293);
+		horizontalBox_1.setBounds(25, 13, 469, 293);
 		frmFilesDattente.getContentPane().add(horizontalBox_1);
 		
-		textFieldTempsPourcent = new JFormattedTextField(numberFormatter);
-		textFieldTempsPourcent.setColumns(10);
-		textFieldTempsPourcent.setBounds(49, 357, 190, 22);
-		frmFilesDattente.getContentPane().add(textFieldTempsPourcent);
+		JSpinner spinnerTempsPourcent = new JSpinner();
+		spinnerTempsPourcent.setModel(new SpinnerNumberModel(new Double(0), new Double(0), null, new Double(1)));
+		spinnerTempsPourcent.setBounds(49, 353, 190, 22);
+		frmFilesDattente.getContentPane().add(spinnerTempsPourcent);
 		
 		JLabel lblProbabilitQuunClient = new JLabel("Probabilité qu'un client attende plus que");
 		lblProbabilitQuunClient.setBounds(49, 330, 348, 16);
@@ -251,18 +251,18 @@ public class AppController
 		buttonCalculerProba.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				if(!textFieldTempsPourcent.getText().equals(""))
+				if(!spinnerTempsPourcent.getValue().toString().equals(""))
 				{
-					if(Integer.valueOf(textFieldTempsPourcent.getText()) > 0)
+					if(Integer.valueOf(spinnerTempsPourcent.getValue().toString()) > 0)
 					{
-						if(Integer.valueOf(txtFieldNbServeur.getText()) == 1)
+						if(Integer.valueOf(spinnerNbServeur.getValue().toString()) == 1)
 						{
-							results = getResult(mm1.L(), mm1.Lq(), mm1.W(), mm1.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), true, Integer.parseInt(textFieldTempsPourcent.getText()), mm1.probaTempsSejour(Double.valueOf(textFieldTempsPourcent.getText())));
+							results = getResult(mm1.L(), mm1.Lq(), mm1.W(), mm1.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), true, Integer.parseInt(spinnerTempsPourcent.getValue().toString()), mm1.probaTempsSejour(Double.valueOf(spinnerTempsPourcent.getValue().toString())));
 							txtAreaResultats.setText(results);
 						}
 						else
 						{
-							results = getResult(mms.L(), mms.Lq(), mms.W(), mms.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), true, Integer.parseInt(textFieldTempsPourcent.getText()), mms.probaTempsSejour(Double.valueOf(textFieldTempsPourcent.getText())));
+							results = getResult(mms.L(), mms.Lq(), mms.W(), mms.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), true, Integer.parseInt(spinnerTempsPourcent.getValue().toString()), mms.probaTempsSejour(Double.valueOf(spinnerTempsPourcent.getValue().toString())));
 							txtAreaResultats.setText(results);
 						}
 					}
@@ -279,9 +279,10 @@ public class AppController
 		
 		Box horizontalBox = Box.createHorizontalBox();
 		horizontalBox.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		horizontalBox.setBounds(25, 315, 469, 92);
+		horizontalBox.setBounds(25, 319, 469, 92);
 		
 		frmFilesDattente.getContentPane().add(horizontalBox);
+		
 	}
 	
 	/**
