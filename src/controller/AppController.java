@@ -6,6 +6,8 @@ import model.FileMMS;
 import model.TimeUnit;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -25,8 +27,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.text.NumberFormatter;
 
 public class AppController 
@@ -46,8 +50,9 @@ public class AppController
 	public void initialize() 
 	{
 		frmFilesDattente = new JFrame();
+		frmFilesDattente.getContentPane().setBackground(SystemColor.menu);
 		frmFilesDattente.setTitle("Files d'attente");
-		frmFilesDattente.setBounds(100, 100, 522, 630);
+		frmFilesDattente.setBounds(100, 100, 522, 654);
 		frmFilesDattente.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frmFilesDattente.addWindowListener(new java.awt.event.WindowAdapter() 
 		{
@@ -76,21 +81,21 @@ public class AppController
 		
 		JSpinner spinnerNbServicesMoy = new JSpinner();
 		spinnerNbServicesMoy.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-		spinnerNbServicesMoy.setBounds(49, 104, 190, 22);
+		spinnerNbServicesMoy.setBounds(49, 124, 190, 22);
 		frmFilesDattente.getContentPane().add(spinnerNbServicesMoy);
 		
 		JSpinner spinnerClientsMoy = new JSpinner();
 		spinnerClientsMoy.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-		spinnerClientsMoy.setBounds(49, 45, 190, 22);
+		spinnerClientsMoy.setBounds(49, 65, 190, 22);
 		frmFilesDattente.getContentPane().add(spinnerClientsMoy);
 		
 		JSpinner spinnerNbServeur = new JSpinner();
 		spinnerNbServeur.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-		spinnerNbServeur.setBounds(49, 188, 190, 22);
+		spinnerNbServeur.setBounds(49, 208, 190, 22);
 		frmFilesDattente.getContentPane().add(spinnerNbServeur);
 		
 		JLabel lblUniteTemps = new JLabel("");
-		lblUniteTemps.setBounds(257, 353, 138, 22);
+		lblUniteTemps.setBounds(257, 385, 138, 22);
 		frmFilesDattente.getContentPane().add(lblUniteTemps);
 		
 		JComboBox<TimeUnit> cbUniteTemps = new JComboBox<TimeUnit>();
@@ -102,7 +107,7 @@ public class AppController
 			}
 		});
 		cbUniteTemps.setBackground(Color.WHITE);
-		cbUniteTemps.setBounds(274, 69, 190, 22);
+		cbUniteTemps.setBounds(274, 89, 190, 22);
 		/** Adds all the time units to the combobox **/
 		TimeUnit[] timeUnits = TimeUnit.class.getEnumConstants();
 		for(int i = 0; i < timeUnits.length; i++)
@@ -113,27 +118,28 @@ public class AppController
 		frmFilesDattente.getContentPane().add(cbUniteTemps);
 		
 		JLabel lblUniteDeTemps = new JLabel("par unité de temps *");
-		lblUniteDeTemps.setBounds(274, 48, 123, 16);
+		lblUniteDeTemps.setBounds(274, 68, 123, 16);
 		frmFilesDattente.getContentPane().add(lblUniteDeTemps);
 		
 		JLabel lblNbClientsMoyenne = new JLabel("Nombre de clients en moyenne *");
-		lblNbClientsMoyenne.setBounds(49, 19, 236, 16);
+		lblNbClientsMoyenne.setBounds(49, 39, 236, 16);
 		frmFilesDattente.getContentPane().add(lblNbClientsMoyenne);
 		
 		JLabel lblNombreDeServices = new JLabel("Nombre de services en moyenne *");
-		lblNombreDeServices.setBounds(49, 75, 236, 16);
+		lblNombreDeServices.setBounds(49, 95, 236, 16);
 		frmFilesDattente.getContentPane().add(lblNombreDeServices);
 		
 		JSpinner spinnerClientsMax = new JSpinner();
 		spinnerClientsMax.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-		spinnerClientsMax.setBounds(49, 240, 190, 22);
+		spinnerClientsMax.setBounds(49, 260, 190, 22);
 		frmFilesDattente.getContentPane().add(spinnerClientsMax);
 		
 		JLabel lblNbClientsMax = new JLabel("Nombre de clients max *");
-		lblNbClientsMax.setBounds(49, 211, 190, 16);
+		lblNbClientsMax.setBounds(49, 231, 190, 16);
 		frmFilesDattente.getContentPane().add(lblNbClientsMax);
 		
 		JCheckBox chckbxIndetermine = new JCheckBox("Indéterminé");
+		chckbxIndetermine.setBackground(SystemColor.menu);
 		chckbxIndetermine.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
@@ -148,11 +154,12 @@ public class AppController
 				}
 			}
 		});
-		chckbxIndetermine.setBounds(257, 239, 100, 25);
+		chckbxIndetermine.setBounds(257, 259, 100, 25);
 		frmFilesDattente.getContentPane().add(chckbxIndetermine);
 		
 		JTextArea txtAreaResultats = new JTextArea();
-		txtAreaResultats.setBounds(49, 440, 404, 125);
+		txtAreaResultats.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		txtAreaResultats.setBounds(49, 469, 404, 125);
 		txtAreaResultats.setEditable(false);
 		Border border = BorderFactory.createLineBorder(Color.BLACK);
 		txtAreaResultats.setBorder(BorderFactory.createCompoundBorder(border, 
@@ -160,7 +167,7 @@ public class AppController
 		frmFilesDattente.getContentPane().add(txtAreaResultats);
 		
 		JLabel lblResultats = new JLabel("Résultats");
-		lblResultats.setBounds(49, 418, 56, 16);
+		lblResultats.setBounds(49, 447, 56, 16);
 		frmFilesDattente.getContentPane().add(lblResultats);
 		
 		JButton btnCalculer = new JButton("Calculer");
@@ -224,29 +231,29 @@ public class AppController
 				}
 			}
 		});
-		btnCalculer.setBounds(365, 251, 99, 25);
+		btnCalculer.setBounds(365, 271, 99, 25);
 		frmFilesDattente.getContentPane().add(btnCalculer);
 		
 		JLabel lblNombreDeServeur = new JLabel("Nombre de serveurs *");
-		lblNombreDeServeur.setBounds(49, 158, 190, 16);
+		lblNombreDeServeur.setBounds(49, 178, 190, 16);
 		frmFilesDattente.getContentPane().add(lblNombreDeServeur);
 		
 		JLabel lblChamps = new JLabel("* : Champs requis");
-		lblChamps.setBounds(367, 280, 115, 14);
+		lblChamps.setBounds(367, 300, 115, 14);
 		frmFilesDattente.getContentPane().add(lblChamps);
 		
 		Box horizontalBox_1 = Box.createHorizontalBox();
-		horizontalBox_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		horizontalBox_1.setBounds(25, 13, 469, 293);
+		horizontalBox_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Proc. Stocha", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		horizontalBox_1.setBounds(23, 13, 469, 313);
 		frmFilesDattente.getContentPane().add(horizontalBox_1);
 		
 		JSpinner spinnerTempsPourcent = new JSpinner();
-		spinnerTempsPourcent.setModel(new SpinnerNumberModel(new Double(0), new Double(0), null, new Double(1)));
-		spinnerTempsPourcent.setBounds(49, 353, 190, 22);
+		spinnerTempsPourcent.setModel(new SpinnerNumberModel(new Double(0), new Double(0), null, new Double(0.1)));
+		spinnerTempsPourcent.setBounds(49, 385, 190, 22);
 		frmFilesDattente.getContentPane().add(spinnerTempsPourcent);
 		
 		JLabel lblProbabilitQuunClient = new JLabel("Probabilité qu'un client attende plus que");
-		lblProbabilitQuunClient.setBounds(49, 330, 348, 16);
+		lblProbabilitQuunClient.setBounds(49, 362, 348, 16);
 		frmFilesDattente.getContentPane().add(lblProbabilitQuunClient);
 
 		JButton buttonCalculerProba = new JButton("Calculer Proba");
@@ -255,16 +262,19 @@ public class AppController
 			{
 				if(!spinnerTempsPourcent.getValue().toString().equals(""))
 				{
-					if(Integer.valueOf(spinnerTempsPourcent.getValue().toString()) > 0)
+					String tpsPourcentTxt = spinnerTempsPourcent.getValue().toString().replace(",", ".");
+					double tpsPourcent = Double.valueOf(tpsPourcentTxt);
+					
+					if(tpsPourcent > 0.0)
 					{
 						if(Integer.valueOf(spinnerNbServeur.getValue().toString()) == 1)
 						{
-							results = getResult(mm1.L(), mm1.Lq(), mm1.W(), mm1.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), true, Integer.parseInt(spinnerTempsPourcent.getValue().toString()), mm1.probaTempsSejour(Double.valueOf(spinnerTempsPourcent.getValue().toString())));
+							results = getResult(mm1.L(), mm1.Lq(), mm1.W(), mm1.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), true, tpsPourcent, mm1.probaTempsSejour(tpsPourcent));
 							txtAreaResultats.setText(results);
 						}
 						else
 						{
-							results = getResult(mms.L(), mms.Lq(), mms.W(), mms.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), true, Integer.parseInt(spinnerTempsPourcent.getValue().toString()), mms.probaTempsSejour(Double.valueOf(spinnerTempsPourcent.getValue().toString())));
+							results = getResult(mms.L(), mms.Lq(), mms.W(), mms.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), true, tpsPourcent, mms.probaTempsSejour(tpsPourcent));
 							txtAreaResultats.setText(results);
 						}
 					}
@@ -276,12 +286,12 @@ public class AppController
 					
 			}
 		});
-		buttonCalculerProba.setBounds(341, 375, 123, 25);
+		buttonCalculerProba.setBounds(341, 407, 123, 25);
 		frmFilesDattente.getContentPane().add(buttonCalculerProba);
 		
 		Box horizontalBox = Box.createHorizontalBox();
-		horizontalBox.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		horizontalBox.setBounds(25, 319, 469, 92);
+		horizontalBox.setBorder(new TitledBorder(null, "Probabilit\u00E9", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		horizontalBox.setBounds(23, 339, 469, 106);
 		
 		frmFilesDattente.getContentPane().add(horizontalBox);
 		
@@ -299,12 +309,12 @@ public class AppController
 	/**
 	 * Creates a result string
 	 */
-	public String getResult(double l, double lq, double w, double wq, TimeUnit tu, boolean isProba, int time, double proba)
+	public String getResult(double l, double lq, double w, double wq, TimeUnit tu, boolean isProba, double time, double proba)
 	{
 		DecimalFormat df = new DecimalFormat("#.##");
 		if(isProba)
 		{
-			return "Nombre moyen de clients dans le système (L) : " + df.format(l) + "\n" + "Nombre moyen de clients dans la file (Lq) : " + df.format(lq) + "\n" + "Durée moyenne d'attente dans le système (W) : " + df.format(w) + " " + tu.name().toLowerCase() + "\n" + "Durée moyenne d'attente dans la file (Wq) : " + df.format(wq) + " " + tu.name().toLowerCase() + "\n" + "Probabilité qu'un client attende plus de " + time + " " + tu.name().toLowerCase() + " est de : " + df.format(proba);
+			return "Nombre moyen de clients dans le système (L) : " + df.format(l) + "\n" + "Nombre moyen de clients dans la file (Lq) : " + df.format(lq) + "\n" + "Durée moyenne d'attente dans le système (W) : " + df.format(w) + " " + tu.name().toLowerCase() + "\n" + "Durée moyenne d'attente dans la file (Wq) : " + df.format(wq) + " " + tu.name().toLowerCase() + "\n" + "Probabilité qu'un client attende plus de " + df.format(time) + " " + tu.name().toLowerCase() + " est de : " + df.format(proba);
 		}
 		else
 		{
