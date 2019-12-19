@@ -185,10 +185,16 @@ public class AppController
 							{
 								if(chckbxIndetermine.isSelected())
 								{
-									System.out.println(spinnerNbServicesMoy.getValue().toString());
 									mm1 = new FileMM1(Double.parseDouble(spinnerClientsMoy.getValue().toString()), Double.parseDouble(spinnerNbServicesMoy.getValue().toString()));
-									results = getResult(mm1.L(), mm1.Lq(), mm1.W(), mm1.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), false, 0, 0);
-									txtAreaResultats.setText(results);
+									if(mm1.getRho() < 1)
+									{
+										results = getResult(mm1.L(), mm1.Lq(), mm1.W(), mm1.Wq(), (TimeUnit) cbUniteTemps.getSelectedItem(), false, 0, 0);
+										txtAreaResultats.setText(results);
+									}
+									else
+									{
+										JOptionPane.showMessageDialog(frmFilesDattente, "Le taux rho est supérieur ou égal à 1, le calcul est donc impossible");
+									}
 								}
 								else
 								{
