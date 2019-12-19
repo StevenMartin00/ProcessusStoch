@@ -19,6 +19,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
@@ -168,7 +170,7 @@ public class AppController
 			{
 				if(!spinnerClientsMoy.getValue().toString().equals("")  && !spinnerNbServicesMoy.getValue().toString().equals(""))
 				{
-					if(Integer.valueOf(spinnerClientsMoy.getValue().toString()) != 0 && Integer.valueOf(spinnerNbServicesMoy.getValue().toString()) != 0)
+					if(Integer.valueOf(spinnerClientsMoy.getValue().toString()) != 0 && Integer.valueOf(spinnerNbServicesMoy.getValue().toString()) != 0 && Integer.valueOf(spinnerNbServeur.getValue().toString()) != 0)
 					{
 						if(Integer.valueOf(spinnerClientsMoy.getValue().toString()) > 0 && Integer.valueOf(spinnerNbServicesMoy.getValue().toString()) > 0 && Integer.valueOf(spinnerNbServeur.getValue().toString()) > 0)
 						{
@@ -206,7 +208,7 @@ public class AppController
 						else
 						{
 							//Print alert < 0
-							JOptionPane.showMessageDialog(frmFilesDattente, "Le nombre de clients, de services ou de serveur ne peut être négatif");
+							JOptionPane.showMessageDialog(frmFilesDattente, "Le nombre de clients, de services ou de serveur ne peut être négatif ou nul");
 						}
 					}
 					else
